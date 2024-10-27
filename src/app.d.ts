@@ -8,8 +8,35 @@ declare namespace App {
   // interface Platform {}
 }
 
+interface Id {
+  tb: string,
+  id: {
+    String: string;
+  }
+}
+
+
 interface Todo {
-  id: number;
-  description: string;
-  done: boolean;
+  id?: Id;
+  title: string;
+  content?: string;
+  completed?: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+interface User {
+  id?: Id;
+  name: string;
+  email: string;
+  // password: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+interface Role {
+  id?: Id;
+  name: string;
+  created_at?: string;
+  updated_at?: string;
 }
