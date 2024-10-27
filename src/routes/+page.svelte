@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { PageData } from "./$types";
   import { onMount } from "svelte";
-
+  import {Notifications, acts} from '@tadashi/svelte-notification'
   const apiEndpoint = import.meta.env.VITE_API_ENDPOINT || "http://192.168.1.16:8080";
 
   // Get todos from page load
@@ -31,15 +31,27 @@
 
         if (!response.ok) {
           console.error("Error submitting form:", response.statusText);
+          acts.add({
+            message: response.statusText,
+            mode: 'error'
+          })
         } else {
           // Optionally, fetch updated todos and update the `todos` array
           const newTodo = await response.json().then((data) => data.todo);
           todos = [...todos, newTodo];
           // Clear form input
           (form as HTMLFormElement).reset();
+          acts.add({
+            message: 'Todo added successfully',
+            mode: 'success'
+          })
         }
       } catch (error) {
         console.error("Fetch error:", error);
+        acts.add({
+          message: error,
+          mode: 'error'
+        })
       }
     });
   });
@@ -56,15 +68,43 @@
         content: todo.content,
         completed: todo.completed,
       }),
+    }).then((response) => {
+      if (!response.ok) {
+        console.error("Error updating todo:", response.statusText);
+        acts.add({
+          message: response.statusText,
+          mode: 'error'
+        })
+      } else {
+        acts.add({
+          message: 'Todo updated successfully',
+          mode: 'success'
+        })
+      }
     });
   }
 
   // Delete todo
   async function deleteTodo(id: string) {
-    await fetch(`${apiEndpoint}/api/todos/${id}`, { method: "DELETE" });
-    todos = todos.filter((todo) => todo.id?.id?.String !== id);
+    await fetch(`${apiEndpoint}/api/todos/${id}`, { method: "DELETE" }).then((response) => {
+      if (!response.ok) {
+        console.error("Error deleting todo:", response.statusText);
+        acts.add({
+          message: response.statusText,
+          mode: 'error'
+        })
+      } else {
+        todos = todos.filter((todo) => todo.id?.id?.String !== id);
+        acts.add({
+          message: 'Todo deleted successfully',
+          mode: 'success'
+        })
+      }
+    });
   }
 </script>
+
+<Notifications />
 
 <div class="container mx-auto mt-16">
   <h1 class="h1 text-center">Todos</h1>
