@@ -19,8 +19,6 @@
       const formData = new FormData(form as HTMLFormElement);
       const data = Object.fromEntries(formData.entries());
 
-      console.log("Form data:", data);
-
       try {
         // Send JSON data to the API
         const response = await fetch(`${apiEndpoint}/api/todos`, {
@@ -34,15 +32,12 @@
         if (!response.ok) {
           console.error("Error submitting form:", response.statusText);
         } else {
-          console.log("Form submitted successfully!");
-
           // Optionally, fetch updated todos and update the `todos` array
           const newTodo = await response.json().then((data) => data.todo);
           todos = [...todos, newTodo];
+          // Clear form input
+          (form as HTMLFormElement).reset();
         }
-
-        // Clear form input
-        (form as HTMLFormElement).reset();
       } catch (error) {
         console.error("Fetch error:", error);
       }
