@@ -2,7 +2,7 @@
   import type { PageData } from "./$types";
   import { onMount } from "svelte";
   import {Notifications, acts} from '@tadashi/svelte-notification'
-  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT || "http://192.168.1.16:8080";
+  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT || "http://localhost:8080";
 
   // Get todos from page load
   export let data: PageData;
